@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        background-color: aqua;
+    }
+    
+</style>
+<body>
+    <label for="form" id="items" Details></label>
+    <form style="text-align: center;" id="item">
+        <h2> APPOINTMENT DETAILS</h2>
+        <hr><hr><br><br>
+        <label for="name" >Name</label>
+        <input type="text"  id="name1" required="">
+        
+        <label for="email" >EmailId</label>
+        <input type="email" id="email">
+
+
+        <input type="submit" id="submit">
+
+        <ul id="Userlist"><ul>
+
+
+
+    </form>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script>
+    let form =document.getElementById("item");
+    let Name =document.getElementById("name1")
+    let Email=document.getElementById("email")
+    let button=document.getElementById("submit")
+
+
+    form.addEventListener('submit',onsubmit)
+
+    function onsubmit(e)
+    {
+        e.preventDefault();
+
+       let obj ={ name:`${Name.value}`, email:`${Email.value}`}
+
+       //localStorage.setItem(`${Email.value}` ,JSON.stringify(obj));
+       axios
+        .post('https://crudcrud.com/api/ff1e01eaa96842b2a8950994ba5c8da9/appointment', obj)
+        .then(res => showNewUser(res.data))
+        .catch(err => console.error(err));
+
+    //   Name.value="";
+    //   Email.value="";
+    }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const localStorageobj=localStorage;
+        const localstoragekey=Object.keys(localStorageobj)
+
+        for(var i=0;i<localstoragekey.length;i++)
+
+        {
+            const key=localstoragekey[i]
+            const userdetailstring=localStorageobj[key];
+            const userdetailobj=JSON.parse(userdetailstring)
+            showNewUser(userdetailobj)
+        }
+    });
+
+       function showNewUser(obj){
+
+      
+
+
+        const userList=document.getElementById('Userlist');
+        const newList=`<li id="${obj.email}"> ${obj.name}--------${obj.email}
+            <button  onclick=edituser('${obj.email}') >edit</button> 
+            <button  onclick=deleteuser('${obj.email}')>delete</button>
+            </li>`
+        userList.innerHTML=userList.innerHTML + newList;
+       }
+
+       function deleteuser(emailid)
+       {
+        localStorage.removeItem(emailid);
+        removeitemfromscreen(emailid);
+
+       }
+
+       function removeitemfromscreen(emailid)
+       {
+        const userList=document.getElementById('Userlist');
+        const childnode=document.getElementById(emailid);
+        userList.removeChild(childnode);
+
+
+
+       }
+
+       function edituser(emailid)
+       {
+          const obj=JSON.parse(localStorage.getItem(emailid))
+          Name.value=`${obj.name}`;
+          Email.value=`${obj.email}`;
+
+          
+          deleteuser(emailid)
+
+       }
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
